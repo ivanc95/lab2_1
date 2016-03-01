@@ -42,13 +42,15 @@
 // ******************************************************************************************* //
 
 typedef enum RS_enum {
-    run, stop, reset
+    write, newLine
 }status;
 
 volatile int q = 0;
+volatile int d = 0;
+volatile int line = 0;
 
-volatile status state = stop;
-volatile status next = run;
+volatile status state = write;
+volatile status next = newLine;
 
 int main(void)
 {
@@ -79,6 +81,17 @@ int main(void)
             
     while(1)
     {       
+        switch(state){
+            case write:
+                next = newLine;
+                break;
+                
+            case newLine:
+                next = write;
+                break;
+            default:
+                state = write;
+        }
     }
     
 }
@@ -97,7 +110,21 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     if(q == 0){
         
         if(key != -1){
+            
+            if(d == 7){
+                d = 0;
+                
+                if(line == 0){
+                    line = 1;
+                    moveCursorLCD(0,2);
+                }
+                else if(line == 1){
+                    line = 0;
+                    moveCursorLCD(0,1);
+                }
+            }
             printCharLCD(key);
+            d++;
         }
         
         q = 1;
