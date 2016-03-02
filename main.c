@@ -32,11 +32,13 @@
 #define ROW_1 LATDbits.LATD12
 #define ROW_2 LATDbits.LATD6
 #define ROW_3 LATDbits.LATD3
-#define ROW_4 LATDbits.LATD1
+#define ROW_4 LATDbits.LATD9
 
 #define COL_1 PORTGbits.RG0
 #define COL_2 PORTGbits.RG13
 #define COL_3 PORTFbits.RF1
+
+volatile int wait = 0;
 
 
 // ******************************************************************************************* //
@@ -78,11 +80,11 @@ int main(void)
     
     printCharLCD('I');
     
-    
+    ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
             
     while(1)
     {       
-        ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
+        
        
 //        switch(state){
 //            case write:
@@ -112,18 +114,21 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     char l = 0;
     char s[3] = {'a', 'b', 'c'};
     if(COL_1 == 0 | COL_2 == 0 | COL_3 == 0){
-    l += !COL_1;
-    l += !COL_2 * 2;
-    l += !COL_3 * 3;
-    
-    
-    if(l != 0){
-        CNCONGbits.ON = 0;
-        CNCONFbits.ON = 0;
-        printCharLCD(scanKeypad());
-        CNCONGbits.ON = 1;
-        CNCONFbits.ON = 1;
+        if(wait == 0) {
+            CNCONGbits.ON = 0;
+            CNCONFbits.ON = 0;
+            l = scanKeypad();
+            if(l != -1) {
+                printCharLCD(l);
+            }
+            ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
+            CNCONGbits.ON = 1;
+            CNCONFbits.ON = 1;
+            wait == 1;
+        }
     }
+    if ((COL_1 == 1 | COL_2 == 1 | COL_3 == 1) && wait == 1) {
+        wait = 0;
     }
 //    char key = scanKeypad();
 //    if(key != -1){

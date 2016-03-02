@@ -1,4 +1,4 @@
-build/default/production/keypad.o:  \
+build/default/debug/keypad.o:  \
 keypad.c  \
 keypad.h  \
 timer.h  \

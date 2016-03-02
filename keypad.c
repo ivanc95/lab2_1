@@ -1,6 +1,7 @@
 #include <xc.h>
 #include "keypad.h"
 #include "timer.h"
+#include "lcd.h"
 
 /* Initialize the rows as ODC outputs and the columns as inputs with pull-up
  * resistors. Don't forget about other considerations...
@@ -9,7 +10,7 @@
 #define ROW_1 LATDbits.LATD12
 #define ROW_2 LATDbits.LATD6
 #define ROW_3 LATDbits.LATD3
-#define ROW_4 LATDbits.LATD1
+#define ROW_4 LATDbits.LATD9
 
 #define COL_1 PORTGbits.RG0
 #define COL_2 PORTGbits.RG13
@@ -31,11 +32,6 @@ void initKeypad(void){
     TRISGbits.TRISG13 = 1;
     TRISGbits.TRISG0 = 1;
     TRISFbits.TRISF1 = 1;
-    
-    //Initialize Column Pull-Ups
-    CNPUGbits.CNPUG13 = 1;
-    CNPUGbits.CNPUG0 = 1;
-    CNPUFbits.CNPUF1 = 1;
     
     //Turn on CN for port E
     CNCONGbits.ON = 1;
@@ -60,13 +56,13 @@ void initKeypad(void){
     TRISDbits.TRISD12 = 0;
     TRISDbits.TRISD6 = 0;
     TRISDbits.TRISD3 = 0;
-    TRISDbits.TRISD1 = 0;
+    TRISDbits.TRISD9 = 0;
     
     //Initialize ODC for row pins
     ODCDbits.ODCD12 = 1;
     ODCDbits.ODCD6 = 1;
     ODCDbits.ODCD3 = 1;
-    ODCDbits.ODCD1 = 1;
+    ODCDbits.ODCD9 = 1;
     
     //ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
 }
@@ -99,7 +95,10 @@ char scanKeypad(void){
         pressed++;
     }
     if(pressed > 1){
-        return -1;
+        return 'e';
+    }
+    else if( pressed == 1) {
+        return key;
     }
     
     //Scan Row 2
@@ -118,7 +117,10 @@ char scanKeypad(void){
         pressed++;
     }
     if(pressed > 1){
-        return -1;
+        return 'e';
+    }
+    else if( pressed == 1) {
+        return key;
     }
     
     //Scan Row 3
@@ -137,14 +139,17 @@ char scanKeypad(void){
         pressed++;
     }
     if(pressed > 1){
-        return -1;
+        return 'e';
+    }
+    else if( pressed == 1) {
+        return key;
     }
     
     //Scan Row 4
     ROW_1 = 1; ROW_2 = 1; ROW_3 = 1; ROW_4 = 0;
     
     if(COL_1 == 0){
-        key = 'v';
+        key = '*';
         pressed++;
     }
     if(COL_2 == 0){
@@ -152,11 +157,10 @@ char scanKeypad(void){
         pressed++;
     }
     if(COL_3 == 0){
-        key = '#';
-        pressed++;
+        writeCMD(0x01);
     }
     if(pressed > 1){
-        return -1;
+        return 'e';
     }
     
     return key;
