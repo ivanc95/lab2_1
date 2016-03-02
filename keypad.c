@@ -68,7 +68,7 @@ void initKeypad(void){
     ODCDbits.ODCD3 = 1;
     ODCDbits.ODCD1 = 1;
     
-    ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
+    //ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
 }
 
 /* This function will be called AFTER you have determined that someone pressed
@@ -144,7 +144,7 @@ char scanKeypad(void){
     ROW_1 = 1; ROW_2 = 1; ROW_3 = 1; ROW_4 = 0;
     
     if(COL_1 == 0){
-        key = '*';
+        key = 'v';
         pressed++;
     }
     if(COL_2 == 0){
