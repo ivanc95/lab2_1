@@ -50,10 +50,12 @@ volatile int d = 0;
 volatile int line = 1;
 volatile int v = 0;
 volatile char k = -1;
-volatile char password[5] = {};
+volatile char password[5] = {' ', ' ', ' ', ' ', '\0'};
 volatile int place = 0;
 
-volatile char setCheck[5] = {'*','*'}; 
+volatile char setCheck[5] = {'*','*'};
+volatile char invalid1 = '*';
+volatile char invalid2 = '#';
 
 volatile status state = wait;
 volatile status next;
@@ -80,14 +82,8 @@ int main(void)
 
     writeCMD(CLR);
     
-//    char str1[] = {'v', 'a', 'n'};
-//    
-//    strcat(password, str1);
-    
     printStringLCD("Enter");
     moveCursorLCD(0,2);
-    
-//    printStringLCD(password);
     
     ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
             
@@ -152,9 +148,10 @@ int main(void)
                 
                 if(k != -1){
                 printCharLCD(k);
-                //strcat(password, k);
+                password[place] = k;
                 place++;
                 k = -1;
+                
                 }
                 else{
                    k = -1;
@@ -165,25 +162,24 @@ int main(void)
                 break;
                 
             case pCheck:
-//                if(place == 4){
-//                    line = 0;
-//                    writeCMD(CLR);
-//                    
-//                    printStringLCD("Good");
-//                    
-//                    delayMs(2000);
-//                    
-//                    writeCMD(CLR);
-//                    
-//                    printStringLCD("Enter");
-//                    moveCursorLCD(0,2);
-//                    
-//                    place = 0;
-//                }
                 
                 if(place == 4){
-                    moveCursorLCD(0,1);
-                    printStringLCD("Good ");
+                    
+                    
+                    
+                    
+                    if(strchr(password,'*') == 0 & strchr(password,'#') == 0){
+                        
+                        moveCursorLCD(0,1);
+                        printStringLCD("Good ");   
+                        
+                    }
+                    else{
+                        
+                        moveCursorLCD(0,1);
+                        printStringLCD("Bad  ");
+                        
+                    }
                     delayMs(2000);
                     writeCMD(CLR);
                     printStringLCD("Enter");
