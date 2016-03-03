@@ -88,7 +88,7 @@ int main(void)
         switch(state){
             case wait:
                 
-                next = scan1;
+                next = scan4;
                 break;
                 
             case scan1:
@@ -108,7 +108,7 @@ int main(void)
                 if(k == -1){
                     k = scanKeypad3();
                 }
-                state = scan4;
+                state = write;
                 break;
             case scan4:
                 CNCONGbits.ON = 0;
@@ -132,7 +132,7 @@ int main(void)
         
                  }
                 
-                state = write;
+                state = scan1;
                 break;
             case write:
                 if(line == 16){
