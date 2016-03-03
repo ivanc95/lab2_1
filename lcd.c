@@ -314,7 +314,7 @@ void initLCD(void) {
     LCD_RW = 0;
     LCD_D7 = 0;
     LCD_D6 = 1;
-    LCD_D5 = 0;
+    LCD_D5 = 1;
     LCD_D4 = 0;
     
     LCD_E = 1;

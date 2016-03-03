@@ -51,6 +51,7 @@ volatile int q = 0;
 volatile int d = 0;
 volatile int line = 0;
 volatile int v = 0;
+volatile char k = '1';
 
 volatile status state = write;
 volatile status next = newLine;
@@ -78,7 +79,7 @@ int main(void)
 
     writeCMD(CLR);
     
-    printCharLCD('I');
+    //printCharLCD('I');
     
     ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
             
@@ -113,62 +114,23 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     CNCONFbits.ON = 1;
     LATDbits.LATD0 = 0;
     
-    char l = 0;
-    char s[3] = {'a', 'b', 'c'};
     if(COL_1 == 0 | COL_2 == 0 | COL_3 == 0){
-        if(wait == 0) {
-            CNCONGbits.ON = 0;
-            CNCONFbits.ON = 0;
-            l = scanKeypad();
-            if(l != -1) {
-                printCharLCD(l);
-            }
-            ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
-            CNCONGbits.ON = 1;
-            CNCONFbits.ON = 1;
-            wait == 1;
+        
+        
+        if(line == 16){
+            moveCursorLCD(0,2);
         }
-    }
-    if ((COL_1 == 1 | COL_2 == 1 | COL_3 == 1) && wait == 1) {
-        wait = 0;
-    }
-//    char key = scanKeypad();
-//    if(key != -1){
-//        printCharLCD(key);
-//    }
-    
-    //if(COL_3 == 1){
+        if(line == 32){
+            moveCursorLCD(0,1);
+            line = 0;
+            k = '2';
+        }
+        printCharLCD(k);
+        line++;
         
-        
-    //}
+    }
     
     
-    
-//    if(q == 0){
-//        
-//        if(key != -1){
-//            
-//            if(d == 7){
-//                d = 0;
-//                
-//                if(line == 0){
-//                    line = 1;
-//                    moveCursorLCD(0,2);
-//                }
-//                else if(line == 1){
-//                    line = 0;
-//                    moveCursorLCD(0,1);
-//                }
-//            }
-//            printCharLCD(key);
-//            d++;
-//        }
-//        
-//        q = 1;
-//    }
-//    else{
-//        q = 0;
-//    }
     
    
 }
