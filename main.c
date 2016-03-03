@@ -49,9 +49,9 @@ typedef enum RS_enum {
 
 volatile int q = 0;
 volatile int d = 0;
-volatile int line = 0;
+volatile int line = 1;
 volatile int v = 0;
-volatile char k = '1';
+volatile char k = -1;
 
 volatile status state = write;
 volatile status next = newLine;
@@ -79,7 +79,7 @@ int main(void)
 
     writeCMD(CLR);
     
-    //printCharLCD('I');
+    printCharLCD('I');
     
     ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
             
@@ -130,60 +130,30 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
                 line = 0;
             }
             
-            //Scan the first row
-            ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
-            if(COL_1 == 0){
-                k = '1';
-                
-            }
-            if(COL_2 == 0){
-                k = '2';
-                
-            }
-            if(COL_3 == 0){
-                k = '3';
-                
-            }
+//            if(k == -1){
+//                k = scanKeypad1();
+//            }
+//            
+//            if(k == -1){
+//                k = scanKeypad2();
+//            }
+//            if(k == -1){
+//                k = scanKeypad3();
+//            }
+//            
+//            if(k == -1){
+//                k = scanKeypad4();
+//            }
             
-            
-            
-             //Scan the second row
-            ROW_1 = 1; ROW_2 = 0; ROW_3 = 1; ROW_4 = 1;
-            if(COL_1 == 0){
-                k = '4';
-                
-            }
-            if(COL_2 == 0){
-                k = '5';
-                
-            }
-            if(COL_3 == 0){
-                k = '6';
-                
-            }
-            
-            //scans the third row
-            ROW_1 = 1; ROW_2 = 1; ROW_3 = 0; ROW_4 = 1;
-            if(COL_1 == 0){
-                k = '7';
-                
-            }
-            if(COL_2 == 0){
-                k = '8';
-                
-            }
-            if(COL_3 == 0){
-                k = '9';
-                
-            }
-            
-            
-            
-            
-            
+            k = scanKeypad();
+           
+           
+           if(k != -1){
             q = 1;
             printCharLCD(k);
             line++;
+            k = -1;
+           }
             ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
             CNCONGbits.ON = 1;
         }

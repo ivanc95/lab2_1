@@ -157,11 +157,126 @@ char scanKeypad(void){
         pressed++;
     }
     if(COL_3 == 0){
-        writeCMD(0x01);
+        key = '#';
     }
     if(pressed > 1){
         return 'e';
     }
+    
+    return key;
+    
+}
+
+char scanKeypad1(void){
+    
+    char key = -1;
+    
+    int pressed = 0;
+    
+    //Scan Row 1
+    ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
+    
+    if(COL_1 == 0){
+        key = '1';
+        pressed++;
+    }
+    if(COL_2 == 0){
+        key = '2';
+        pressed++;
+    }
+    if(COL_3 == 0){
+        key = '3';
+        pressed++;
+    }
+    if(pressed > 1){
+        key = -1;
+    }
+    
+    return key;
+}
+
+char scanKeypad2(void){
+    
+    char key = -1;
+    
+    int pressed = 0;
+    
+    //Scan Row 2
+    ROW_1 = 1; ROW_2 = 0; ROW_3 = 1; ROW_4 = 1;
+    
+    if(COL_1 == 0){
+        key = '4';
+        pressed++;
+    }
+    if(COL_2 == 0){
+        key = '5';
+        pressed++;
+    }
+    if(COL_3 == 0){
+        key = '6';
+        pressed++;
+    }
+    if(pressed > 1){
+        key = -1;
+    }
+    
+    return key;
+    
+}
+
+char scanKeypad3(void){
+    
+    char key = -1;
+    
+    int pressed = 0;
+    
+    //Scan Row 3
+    ROW_1 = 1; ROW_2 = 1; ROW_3 = 0; ROW_4 = 1;
+    
+    if(COL_1 == 0){
+        key = '7';
+        pressed++;
+    }
+    if(COL_2 == 0){
+        key = '8';
+        pressed++;
+    }
+    if(COL_3 == 0){
+        key = '9';
+        pressed++;
+    }
+    if(pressed > 1){
+        key = -1;
+    }
+    
+    return key;
+    
+}
+
+char scanKeypad4(void){
+    
+    char key = -1;
+    
+//    int pressed = 0;
+    
+    //Scan Row 4
+    ROW_1 = 1; ROW_2 = 1; ROW_3 = 1; ROW_4 = 0;
+    
+//    if(COL_1 == 0){
+//        key = '*';
+//        pressed++;
+//    }
+    if(COL_2 == 0){
+        key = '0';
+//        pressed++;
+    }
+    if(COL_3 == 0){
+        key = '#';
+//        pressed++;
+    }
+//    if(pressed > 1){
+//        key = -1;
+//    }
     
     return key;
     
