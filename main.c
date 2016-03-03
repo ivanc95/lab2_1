@@ -120,6 +120,7 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
         
         if(q == 0){
          
+            CNCONGbits.ON = 0;
             //Moves cursor when appropriate
             if(line == 16){
                 moveCursorLCD(0,2);
@@ -144,12 +145,30 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
                 
             }
             
+            
+            
+             //Scan the second row
+            ROW_1 = 1; ROW_2 = 0; ROW_3 = 1; ROW_4 = 1;
+            if(COL_1 == 0){
+                k = '4';
+                
+            }
+            if(COL_2 == 0){
+                k = '5';
+                
+            }
+            if(COL_3 == 0){
+                k = '6';
+                
+            }
+            
+            
+            
             q = 1;
             printCharLCD(k);
             line++;
-            if(ROW_1 == 1){
-                ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
-            }
+            ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
+            CNCONGbits.ON = 1;
         }
         else if(q == 1){
             q = 0;
