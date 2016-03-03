@@ -53,7 +53,7 @@ volatile char k = -1;
 volatile char password[5] = {' ', ' ', ' ', ' ', '\0'};
 volatile int place = 0;
 
-volatile char setCheck[5] = {'*','*'};
+volatile char setCheck[5] = {'*', '*', ' ', ' ', '\0'};
 volatile char invalid1 = '*';
 volatile char invalid2 = '#';
 
@@ -185,6 +185,17 @@ int main(void)
                     printStringLCD("Enter");
                     moveCursorLCD(0,2);
                     place = 0;
+                    password[0] = ' '; 
+                    password[1] = ' ';
+                    password[2] = ' ';
+                    password[3] = ' ';
+                }
+                else if(place == 2){
+                    
+                    if(strcmp(password, setCheck) == 0){
+                        writeCMD(CLR);
+                        printStringLCD("Set Mode"); 
+                    }
                     
                 }
                 
