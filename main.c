@@ -201,7 +201,9 @@ int main(void)
                     
                     if(strcmp(password, setCheck) == 0){
                         writeCMD(CLR);
-                        printStringLCD("Set Mode"); 
+                        printStringLCD("Set Mode");
+                        moveCursorLCD(0,2);
+                        place = 0;
                         x = 1;
                     }
                     
@@ -224,13 +226,13 @@ int main(void)
                     if(strchr(password,'*') == 0 & strchr(password,'#') == 0){
                         
                         moveCursorLCD(0,1);
-                        printStringLCD("Valid");   
+                        printStringLCD("Valid   ");   
                         
                     }
                     else{
                         
                         moveCursorLCD(0,1);
-                        printStringLCD("Invalid");
+                        printStringLCD("Invalid ");
                         
                     }
                     delayMs(2000);
