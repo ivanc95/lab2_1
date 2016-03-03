@@ -105,11 +105,13 @@ int main(void)
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     IFS1bits.CNGIF = 0;    //Reset change notification flag
     IFS1bits.CNFIF = 0;
+    LATDbits.LATD0 = 1;
     CNCONGbits.ON = 0;
     CNCONFbits.ON = 0;
     delayMs(25);
     CNCONGbits.ON = 1;
     CNCONFbits.ON = 1;
+    LATDbits.LATD0 = 0;
     
     char l = 0;
     char s[3] = {'a', 'b', 'c'};
