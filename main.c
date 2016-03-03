@@ -36,7 +36,7 @@
 
 #define COL_1 PORTGbits.RG0
 #define COL_2 PORTGbits.RG13
-#define COL_3 PORTFbits.RF1
+#define COL_3 PORTGbits.RG12
 
 volatile int wait = 0;
 
@@ -105,28 +105,35 @@ int main(void)
 
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     IFS1bits.CNGIF = 0;    //Reset change notification flag
-    IFS1bits.CNFIF = 0;
+    //IFS1bits.CNFIF = 0;
     LATDbits.LATD0 = 1;
     CNCONGbits.ON = 0;
-    CNCONFbits.ON = 0;
+    //CNCONFbits.ON = 0;
     delayMs(25);
     CNCONGbits.ON = 1;
-    CNCONFbits.ON = 1;
+    //CNCONFbits.ON = 1;
     LATDbits.LATD0 = 0;
     
     if(COL_1 == 0 | COL_2 == 0 | COL_3 == 0){
         
         
-        if(line == 16){
-            moveCursorLCD(0,2);
+        if(q == 0){
+         
+            if(line == 16){
+                moveCursorLCD(0,2);
+            }
+            if(line == 32){
+                moveCursorLCD(0,1);
+                line = 0;
+                k = '2';
+            }
+            printCharLCD(k);
+            line++;
+            q = 1;
         }
-        if(line == 32){
-            moveCursorLCD(0,1);
-            line = 0;
-            k = '2';
+        else if(q == 1){
+            q = 0;
         }
-        printCharLCD(k);
-        line++;
         
     }
     

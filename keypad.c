@@ -14,7 +14,7 @@
 
 #define COL_1 PORTGbits.RG0
 #define COL_2 PORTGbits.RG13
-#define COL_3 PORTFbits.RF1
+#define COL_3 PORTGbits.RG12
 
 /* Pins used for the key pad
  *                      J11
@@ -31,24 +31,24 @@ void initKeypad(void){
     //Initialize Column Tristates
     TRISGbits.TRISG13 = 1;
     TRISGbits.TRISG0 = 1;
-    TRISFbits.TRISF1 = 1;
+    TRISGbits.TRISG12 = 1;
     
     //Turn on CN for port E
     CNCONGbits.ON = 1;
-    CNCONFbits.ON = 1;
+    //CNCONFbits.ON = 1;
     
     
     //Enable CN Interrupt for each pin
     CNENGbits.CNIEG13 = 1;
     CNENGbits.CNIEG0 = 1;
-    CNENFbits.CNIEF1 = 1;
+    CNENGbits.CNIEG12 = 1;
     
     
     IFS1bits.CNGIF = 0;
     IEC1bits.CNGIE = 1;
     
-    IFS1bits.CNFIF = 0;
-    IEC1bits.CNFIE = 1;
+//    IFS1bits.CNFIF = 0;
+//    IEC1bits.CNFIE = 1;
     
     IPC8bits.CNIP = 7;
     
