@@ -50,6 +50,7 @@ volatile int d = 0;
 volatile int line = 1;
 volatile int v = 0;
 volatile char k = -1;
+volatile int x = 0;
 volatile char password[5] = {' ', ' ', ' ', ' ', '\0'};
 volatile int place = 0;
 
@@ -156,7 +157,13 @@ int main(void)
                 else{
                    k = -1;
                 }
-                state = pCheck;
+                if(x == 1){
+                    state = settings;
+                }
+                else{
+                    state = pCheck;
+                }
+                
                 ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
                 CNCONGbits.ON = 1;
                 break;
@@ -195,6 +202,7 @@ int main(void)
                     if(strcmp(password, setCheck) == 0){
                         writeCMD(CLR);
                         printStringLCD("Set Mode"); 
+                        x = 1;
                     }
                     
                 }
@@ -207,6 +215,37 @@ int main(void)
             case pSave:
                 break;
             case settings:
+                
+                if(place == 4){
+                    
+                    
+                    
+                    
+                    if(strchr(password,'*') == 0 & strchr(password,'#') == 0){
+                        
+                        moveCursorLCD(0,1);
+                        printStringLCD("Valid");   
+                        
+                    }
+                    else{
+                        
+                        moveCursorLCD(0,1);
+                        printStringLCD("Invalid");
+                        
+                    }
+                    delayMs(2000);
+                    writeCMD(CLR);
+                    printStringLCD("Enter");
+                    moveCursorLCD(0,2);
+                    place = 0;
+                    password[0] = ' '; 
+                    password[1] = ' ';
+                    password[2] = ' ';
+                    password[3] = ' ';
+                    
+                    x = 0;
+                }
+                
                 break;
             default:
                 state = wait;
