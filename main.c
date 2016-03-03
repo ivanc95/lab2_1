@@ -162,6 +162,23 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
                 
             }
             
+            //scans the third row
+            ROW_1 = 1; ROW_2 = 1; ROW_3 = 0; ROW_4 = 1;
+            if(COL_1 == 0){
+                k = '7';
+                
+            }
+            if(COL_2 == 0){
+                k = '8';
+                
+            }
+            if(COL_3 == 0){
+                k = '9';
+                
+            }
+            
+            
+            
             
             
             q = 1;
