@@ -117,23 +117,45 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     if(COL_1 == 0 | COL_2 == 0 | COL_3 == 0){
         
         
+        
         if(q == 0){
          
+            //Moves cursor when appropriate
             if(line == 16){
                 moveCursorLCD(0,2);
             }
             if(line == 32){
                 moveCursorLCD(0,1);
                 line = 0;
-                k = '2';
             }
+            
+            //Scan the first row
+            ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
+            if(COL_1 == 0){
+                k = '1';
+                
+            }
+            if(COL_2 == 0){
+                k = '2';
+                
+            }
+            if(COL_3 == 0){
+                k = '3';
+                
+            }
+            
+            q = 1;
             printCharLCD(k);
             line++;
-            q = 1;
+            if(ROW_1 == 1){
+                ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
+            }
         }
         else if(q == 1){
             q = 0;
         }
+        
+        
         
     }
     
