@@ -9,8 +9,8 @@
 
 #define ROW_1 LATDbits.LATD12
 #define ROW_2 LATDbits.LATD6
-#define ROW_3 LATDbits.LATD3
-#define ROW_4 LATDbits.LATD9
+#define ROW_3 LATDbits.LATD5
+#define ROW_4 LATDbits.LATD11
 
 #define COL_1 PORTGbits.RG0
 #define COL_2 PORTGbits.RG13
@@ -52,17 +52,20 @@ void initKeypad(void){
     
     IPC8bits.CNIP = 7;
     
-    //Initialize Row Tristates
+    //Disable PMAEN for pin RD11
+    PMAEN = 0;
+    
+    //Initialize Row Tri-States
     TRISDbits.TRISD12 = 0;
     TRISDbits.TRISD6 = 0;
-    TRISDbits.TRISD3 = 0;
-    TRISDbits.TRISD9 = 0;
+    TRISDbits.TRISD5 = 0;
+    TRISDbits.TRISD11 = 0;
     
     //Initialize ODC for row pins
     ODCDbits.ODCD12 = 1;
     ODCDbits.ODCD6 = 1;
-    ODCDbits.ODCD3 = 1;
-    ODCDbits.ODCD9 = 1;
+    ODCDbits.ODCD5 = 1;
+    ODCDbits.ODCD11 = 1;
     
     //ROW_1 = 0; ROW_2 = 1; ROW_3 = 1; ROW_4 = 1;
 }
@@ -262,10 +265,10 @@ char scanKeypad4(void){
     //Scan Row 4
     ROW_1 = 1; ROW_2 = 1; ROW_3 = 1; ROW_4 = 0;
     
-//    if(COL_1 == 0){
-//        key = '*';
+    if(COL_1 == 0){
+        key = '*';
 //        pressed++;
-//    }
+    }
     if(COL_2 == 0){
         key = '0';
 //        pressed++;

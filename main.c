@@ -31,20 +31,18 @@
 
 #define ROW_1 LATDbits.LATD12
 #define ROW_2 LATDbits.LATD6
-#define ROW_3 LATDbits.LATD3
-#define ROW_4 LATDbits.LATD9
+#define ROW_3 LATDbits.LATD5
+#define ROW_4 LATDbits.LATD11
 
 #define COL_1 PORTGbits.RG0
 #define COL_2 PORTGbits.RG13
 #define COL_3 PORTGbits.RG12
 
-volatile int wait = 0;
-
 
 // ******************************************************************************************* //
 
 typedef enum RS_enum {
-    write, newLine
+    wait, scan1, scan2, scan3, scan4, write
 }status;
 
 volatile int q = 0;
@@ -53,8 +51,8 @@ volatile int line = 1;
 volatile int v = 0;
 volatile char k = -1;
 
-volatile status state = write;
-volatile status next = newLine;
+volatile status state = wait;
+volatile status next;
 
 int main(void)
 {
@@ -87,85 +85,94 @@ int main(void)
     {       
         
        
-//        switch(state){
-//            case write:
-//                next = newLine;
-//                
-//                break;
-//                
-//            case newLine:
-//                next = write;
-//                break;
-//            default:
-//                state = write;
-//        }
+        switch(state){
+            case wait:
+                
+                next = scan1;
+                break;
+                
+            case scan1:
+                if(k == -1){
+                    k = scanKeypad1();
+                    
+                }
+                state = scan2;
+                break;
+            case scan2:
+                if(k == -1){
+                    k = scanKeypad2();
+                }
+                state = scan3;
+                break;
+            case scan3:
+                if(k == -1){
+                    k = scanKeypad3();
+                }
+                state = scan4;
+                break;
+            case scan4:
+                CNCONGbits.ON = 0;
+                ROW_1 = 1; ROW_2 = 1; ROW_3 = 1; ROW_4 = 0;
+                if(COL_1 == 0){
+   
+                     k = '*';
+//                   delayMs(25);
+        
+                 }
+                else if(COL_2 == 0){
+   
+                     k = '0';
+//                   delayMs(25);
+        
+                 }
+                 else if(COL_3 == 0){
+   
+                    k = '#';
+//                    delayMs(25);
+        
+                 }
+                
+                state = write;
+                break;
+            case write:
+                if(line == 16){
+                    moveCursorLCD(0,2);
+                }
+                if(line == 32){
+                    moveCursorLCD(0,1);
+                    line = 0;
+                }
+                if(k != -1){
+                printCharLCD(k);
+                k = -1;
+                line++;
+                }
+                else{
+                   k = -1;
+                }
+                state = wait;
+                ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
+                CNCONGbits.ON = 1;
+                break;
+            default:
+                state = wait;
+        }
     }
     
 }
 
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     IFS1bits.CNGIF = 0;    //Reset change notification flag
-    //IFS1bits.CNFIF = 0;
     LATDbits.LATD0 = 1;
     CNCONGbits.ON = 0;
-    //CNCONFbits.ON = 0;
-    delayMs(25);
+    delayMs(5);
     CNCONGbits.ON = 1;
-    //CNCONFbits.ON = 1;
     LATDbits.LATD0 = 0;
     
     if(COL_1 == 0 | COL_2 == 0 | COL_3 == 0){
-        
-        
-        
-        if(q == 0){
-         
-            CNCONGbits.ON = 0;
-            //Moves cursor when appropriate
-            if(line == 16){
-                moveCursorLCD(0,2);
-            }
-            if(line == 32){
-                moveCursorLCD(0,1);
-                line = 0;
-            }
-            
-//            if(k == -1){
-//                k = scanKeypad1();
-//            }
-//            
-//            if(k == -1){
-//                k = scanKeypad2();
-//            }
-//            if(k == -1){
-//                k = scanKeypad3();
-//            }
-//            
-//            if(k == -1){
-//                k = scanKeypad4();
-//            }
-            
-            k = scanKeypad();
-           
-           
-           if(k != -1){
-            q = 1;
-            printCharLCD(k);
-            line++;
-            k = -1;
-           }
-            ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
-            CNCONGbits.ON = 1;
-        }
-        else if(q == 1){
-            q = 0;
-        }
-        
-        
-        
+        state = next;
     }
     
     
     
-   
 }
