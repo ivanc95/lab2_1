@@ -42,7 +42,7 @@
 // ******************************************************************************************* //
 
 typedef enum RS_enum {
-    wait, scan1, scan2, scan3, scan4, write
+    wait, scan1, scan2, scan3, scan4, write, pCheck, pFail, pSave, settings
 }status;
 
 volatile int q = 0;
@@ -50,6 +50,10 @@ volatile int d = 0;
 volatile int line = 1;
 volatile int v = 0;
 volatile char k = -1;
+volatile char password[5] = {};
+volatile int place = 0;
+
+volatile char setCheck[5] = {'*','*'}; 
 
 volatile status state = wait;
 volatile status next;
@@ -57,7 +61,6 @@ volatile status next;
 int main(void)
 {
     enableInterrupts();
-    
     
     
     SYSTEMConfigPerformance(10000000);
@@ -77,7 +80,14 @@ int main(void)
 
     writeCMD(CLR);
     
-    printCharLCD('I');
+//    char str1[] = {'v', 'a', 'n'};
+//    
+//    strcat(password, str1);
+    
+    printStringLCD("Enter");
+    moveCursorLCD(0,2);
+    
+//    printStringLCD(password);
     
     ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
             
@@ -98,18 +108,21 @@ int main(void)
                 }
                 state = scan2;
                 break;
+                
             case scan2:
                 if(k == -1){
                     k = scanKeypad2();
                 }
                 state = scan3;
                 break;
+                
             case scan3:
                 if(k == -1){
                     k = scanKeypad3();
                 }
                 state = write;
                 break;
+                
             case scan4:
                 CNCONGbits.ON = 0;
                 ROW_1 = 1; ROW_2 = 1; ROW_3 = 1; ROW_4 = 0;
@@ -134,25 +147,59 @@ int main(void)
                 
                 state = scan1;
                 break;
+                
             case write:
-                if(line == 16){
-                    moveCursorLCD(0,2);
-                }
-                if(line == 32){
-                    moveCursorLCD(0,1);
-                    line = 0;
-                }
+                
                 if(k != -1){
                 printCharLCD(k);
+                //strcat(password, k);
+                place++;
                 k = -1;
-                line++;
                 }
                 else{
                    k = -1;
                 }
-                state = wait;
+                state = pCheck;
                 ROW_1 = 0; ROW_2 = 0; ROW_3 = 0; ROW_4 = 0;
                 CNCONGbits.ON = 1;
+                break;
+                
+            case pCheck:
+//                if(place == 4){
+//                    line = 0;
+//                    writeCMD(CLR);
+//                    
+//                    printStringLCD("Good");
+//                    
+//                    delayMs(2000);
+//                    
+//                    writeCMD(CLR);
+//                    
+//                    printStringLCD("Enter");
+//                    moveCursorLCD(0,2);
+//                    
+//                    place = 0;
+//                }
+                
+                if(place == 4){
+                    moveCursorLCD(0,1);
+                    printStringLCD("Good ");
+                    delayMs(2000);
+                    writeCMD(CLR);
+                    printStringLCD("Enter");
+                    moveCursorLCD(0,2);
+                    place = 0;
+                    
+                }
+                
+                state = wait;
+                
+                break;
+            case pFail:
+                break;
+            case pSave:
+                break;
+            case settings:
                 break;
             default:
                 state = wait;
@@ -170,6 +217,7 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt( void ){
     LATDbits.LATD0 = 0;
     
     if(COL_1 == 0 | COL_2 == 0 | COL_3 == 0){
+        
         state = next;
     }
     
